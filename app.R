@@ -1,5 +1,6 @@
 library(shinydashboard)
 
+# ui <- dashboardPage(skin = "green",
 ui <- dashboardPage(
   # static dropdownMenu
   # dashboardHeader(title = "Basic dashboard",
@@ -132,9 +133,17 @@ ui <- dashboardPage(
                 infoBoxOutput("progressBox2"),
                 infoBoxOutput("approvalBox2")
               ),
+              # valueBoxes
               fluidRow(
                 # Clicking this will increment the progress amount
                 box(width = 4, actionButton("count", "Increment progress"))
+              ),
+              fluidRow(
+                # static valueBox
+                valueBox(10 * 2, "New Orders", icon = icon("credit-card")),
+                # dynamic valueBox
+                valueBoxOutput("progressValueBox"),
+                valueBoxOutput("approvalValueBox")
               )
       )
     )
@@ -169,8 +178,8 @@ server <- function(input, output) {
     })
     dropdownMenu(type = "tasks", badgeStatus = "success", .list = tasks)
   })
-
-  # sidebarMenu => dynamic으로 설정 시 menuItem 선택된 상태로 실행되지 않는 문제 발생
+  
+  # sidebarMenu => menuItem not selected when running dynamic
   # output$sidebarMenu <- renderMenu({
   #   sidebarMenu(
   #     # sidebarSearchForm(textId = "searchText",buttonId = "searchButton",label = "Search..."),
@@ -181,7 +190,7 @@ server <- function(input, output) {
   #     textInput("text", "Text Input:")
   #   )
   # })
-    
+  
   output$plot1 <- renderPlot({
     data <- histdata[seq_len(input$slider)]
     # data <- histdata[1:input$slider]
@@ -191,13 +200,34 @@ server <- function(input, output) {
   output$tabset1Selected <- renderText({
     input$tabset1
   })
-  
+
+  # infoBox  
   output$progressBox <- renderInfoBox({
+    cat("infoBox 1 : ", input$count, "\n")
     infoBox("Progress", paste0(25 + input$count, "%"), icon = icon("list"), color = "purple")
   })
   
   output$approvalBox <- renderInfoBox({
-    infoBox("Approval", "80%", icon = icon("thumbs-up", lib = "glyphicon"), color = "yellow")
+    infoBox("Approval(link)", "80%", icon = icon("thumbs-up", lib = "glyphicon"), color = "yellow", href="http://www.google.com")
+  })
+
+  output$progressBox2 <- renderInfoBox({
+    cat("infoBox 2 : ", input$count, "\n")
+    infoBox("Progress", paste0(25 + input$count, "%"), icon = icon("list"), color = "purple", fill = TRUE)
+  })
+  
+  output$approvalBox2 <- renderInfoBox({
+    infoBox("Approval", "80%", icon = icon("thumbs-up", lib = "glyphicon"), color = "yellow", fill = TRUE)
+  })
+  
+  # valueBox  
+  output$progressValueBox <- renderValueBox({
+    cat("valueBox 1 : ", input$count, "\n")
+    valueBox(paste0(25 + input$count, "%"), "Progress", icon = icon("list"), color = "purple")
+  })
+  
+  output$approvalValueBox <- renderValueBox({
+    valueBox("80%", "Approval", icon = icon("thumbs-up", lib = "glyphicon"), color = "yellow")
   })
 }
 
