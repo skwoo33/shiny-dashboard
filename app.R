@@ -1,7 +1,7 @@
 library(shinydashboard)
 
 ui <- dashboardPage(
-  # #static dropdownMenu
+  # static dropdownMenu
   # dashboardHeader(title = "Basic dashboard",
   #                 dropdownMenu(type = "messages",
   #                              messageItem(
@@ -21,98 +21,121 @@ ui <- dashboardPage(
   #                                time = "2014-12-01"
   #                              )
   #                 )),
-  # #dynamic dropdownMenu
+  # dynamic dropdownMenu
   dashboardHeader(title = "My Dashboard",
-    # disable=TRUE,
-    dropdownMenuOutput("messageMenu"),
-    dropdownMenu(type = "notifications",
-      notificationItem(
-        text = "5 new users today",
-        icon("users"),
-        href="http://www.naver.com"
-      ),
-      notificationItem(
-        text = "12 items delivered",
-        icon("truck"),
-        status = "success"
-      ),
-      notificationItem(
-        text = "Server load at 86%",
-        icon = icon("exclamation-triangle"),
-        status = "warning"
-      )
-    ),
-    dropdownMenuOutput("taskMenu")
+                  # disable=TRUE,
+                  dropdownMenuOutput("messageMenu"),
+                  dropdownMenu(type = "notifications",
+                               notificationItem(
+                                 text = "5 new users today",
+                                 icon("users"),
+                                 href="http://www.naver.com"
+                               ),
+                               notificationItem(
+                                 text = "12 items delivered",
+                                 icon("truck"),
+                                 status = "success"
+                               ),
+                               notificationItem(
+                                 text = "Server load at 86%",
+                                 icon = icon("exclamation-triangle"),
+                                 status = "warning"
+                               )
+                  ),
+                  dropdownMenuOutput("taskMenu")
   ),
   dashboardSidebar(
     # disable=TRUE,
+    # static sidebarMenu
     sidebarMenu(
-      sidebarSearchForm(textId="searchText",buttonId="searchButton",label="Search..."),
-      menuItem("Dashboard", tabName="dashboard", icon=icon("dashboard"), badgeLabel="new", badgeColor="blue"),
-      menuItem("Widgets", tabName="widgets", icon=icon("th")),
-      menuItem("Source code", href="https://github.com/rstudio/shinydashboafd", icon=icon("file-code-o")),
-      sliderInput("slider2", "Slider:", min=1, max=20, value=5),
+      sidebarSearchForm(textId = "searchText",buttonId = "searchButton",label = "Search..."),
+      menuItem("Dashboard", tabName = "dashboard", icon = icon("dashboard")),
+      menuItem("Widgets", tabName = "widgets", icon = icon("th"), badgeLabel = "new", badgeColor = "red", selected = TRUE),
+      menuItem("Source code", href = "https://github.com/rstudio/shinydashboafd", icon = icon("file-code-o")),
+      sliderInput("slider2", "Slider:", min = 1, max = 20, value = 5),
       textInput("text", "Text Input:")
     )
+    # dynamic sidebarMenu
+    # sidebarMenuOutput("sidebarMenu")
   ),
   dashboardBody(
     tabItems(
-      tabItem(tabName="dashboard",
-        fluidRow(
-          box(title = "Histogram",
-              footer = "This is a histogram.",
-              solidHeader = TRUE,
-              status = "primary",
-              collapsible = TRUE,
-              # background = "maroon",
-              plotOutput("plot1", height = 250)),
-          
-          box(
-            title = "Controls",
-            solidHeader = TRUE,
-            # status = "warning",
-            background = "black",
-            "Box content here", br(), "More box content",
-            sliderInput("slider", "Number of observations:", 1, 100, 50)
-          )
-        ),
-        fluidRow(
-          tabBox(
-            title = "First tabBox",
-            id = "tabset1", height = "250px",
-            tabPanel("Tab1", "First tab content"),
-            tabPanel("Tab2", "Tab content 2")
-          ),
-          tabBox(
-            side = "right", height = "250px",
-            selected = "Tab3",
-            tabPanel("Tab1", "Tab content 1"),
-            tabPanel("Tab2", "Tab content 2"),
-            tabPanel("Tab3", "Note that when side=right, the tab order is reversed.")
-          )
-        ),
-        fluidRow(
-          tabBox(
-            title = tagList(icon("gear"), "tabBox status"),
-            tabPanel("Tab1",
-              "Currently selected tab from first box:",
-              verbatimTextOutput("tabset1Selected")
-            ),
-            tabPanel("Tab2", "Tab content 2")
-          ),
-          box(title = "Tabs",
-              tabsetPanel(
-                tabPanel("Plot",
-                         textInput("textIntab", "Input Text:")
-                ),
-                tabPanel("Summary"),
-                tabPanel("Table")
-              )
-          )
-        )
+      tabItem(tabName = "dashboard",
+              h2("dashboard tab content")
       ),
-      tabItem(tabName="widgets",
-        h2("Widgets tab content")
+      tabItem(tabName = "widgets",
+              fluidRow(
+                box(title = "Histogram",
+                    footer = "This is a histogram.",
+                    solidHeader = TRUE,
+                    status = "primary",
+                    collapsible = TRUE,
+                    # background = "maroon",
+                    plotOutput("plot1", height = 200)),
+                
+                box(
+                  title = "Controls",
+                  solidHeader = TRUE,
+                  # status = "warning",
+                  background = "black",
+                  "Box content here", br(), "More box content",
+                  sliderInput("slider", "Number of observations:", 1, 100, 50)
+                )
+              ),
+              fluidRow(
+                tabBox(
+                  title = "First tabBox",
+                  id = "tabset1", height = "150px",
+                  tabPanel("Tab1", "First tab content"),
+                  tabPanel("Tab2", "Tab content 2")
+                ),
+                tabBox(
+                  side = "right", height = "150px",
+                  selected = "Tab3",
+                  tabPanel("Tab1", "Tab content 1"),
+                  tabPanel("Tab2", "Tab content 2"),
+                  tabPanel("Tab3", "Note that when side = right, the tab order is reversed.")
+                )
+              ),
+              fluidRow(
+                tabBox(
+                  title = tagList(icon("gear"), "tabBox status"),
+                  tabPanel("Tab1",
+                           "Currently selected tab from first box:",
+                           verbatimTextOutput("tabset1Selected")
+                  ),
+                  tabPanel("Tab2", "Tab content 2")
+                ),
+                box(title = "Tabs",
+                    tabsetPanel(
+                      tabPanel("Plot",
+                               textInput("textIntab", "Input Text:")
+                      ),
+                      tabPanel("Summary"),
+                      tabPanel("Table")
+                    )
+                )
+              ),
+              # infoBoxes with fill=FALSE
+              fluidRow(
+                # static infoBox
+                infoBox("New Orders", 10 * 2, icon = icon("credit-card")),
+                # dynamic infoBox
+                infoBoxOutput("progressBox"),
+                infoBoxOutput("approvalBox")
+              ),
+              # infoBoxes with fill=TRUE
+              fluidRow(
+                # static infoBox
+                infoBox("New Orders", 10 * 2, icon = icon("credit-card"), fill = TRUE),
+                # dynamic infoBox
+                infoBoxOutput("progressBox2"),
+                infoBoxOutput("approvalBox2")
+              ),
+              fluidRow(
+                # Clicking this will increment the progress amount
+                box(width = 4, actionButton("count", "Increment progress"))
+              )
       )
     )
   )
@@ -121,30 +144,44 @@ ui <- dashboardPage(
 server <- function(input, output) {
   set.seed(122)
   histdata <- rnorm(500)
-  messageData <- data.frame(from=c("Sales Dept","New User","Support"),
-                            message=c("Sales are steady this month.","How do I register?","The new server is ready."),
-                            time=c("","13:45","2014-12-01"),
-                            icon=c("user","question","life-ring")
-                            )
-  taskData <- data.frame(text=c("Documentation","Project X","Server deployment","Overall project"),
-                         value=c(90,17,75,80),
-                         color=c("green","aqua","yellow","red")
-                         )
+  
+  # dropdownMenu
+  messageData <- data.frame(from = c("Sales Dept","New User","Support"),
+                            message = c("Sales are steady this month.","How do I register?","The new server is ready."),
+                            time = c("","13:45","2014-12-01"),
+                            icon = c("user","question","life-ring")
+  )
+  taskData <- data.frame(text = c("Documentation","Project X","Server deployment","Overall project"),
+                         value = c(90,17,75,80),
+                         color = c("green","aqua","yellow","red")
+  )
   
   output$messageMenu <- renderMenu({
     msgs <- apply(messageData, 1, function(row) {
-      messageItem(from=row[["from"]], message=row[["message"]], time=row[["time"]], icon=icon(row[["icon"]]))
+      messageItem(from = row[["from"]], message = row[["message"]], time = row[["time"]], icon = icon(row[["icon"]]))
     })
-    dropdownMenu(type="messages", .list=msgs)
+    dropdownMenu(type = "messages", .list = msgs)
   })
   
   output$taskMenu <- renderMenu({
     tasks <- apply(taskData, 1, function(row) {
-      taskItem(text=row[["text"]], value=row[["value"]], color=row[["color"]])
+      taskItem(text = row[["text"]], value = row[["value"]], color = row[["color"]])
     })
-    dropdownMenu(type="tasks", badgeStatus="success", .list=tasks)
+    dropdownMenu(type = "tasks", badgeStatus = "success", .list = tasks)
   })
-  
+
+  # sidebarMenu => dynamic으로 설정 시 menuItem 선택된 상태로 실행되지 않는 문제 발생
+  # output$sidebarMenu <- renderMenu({
+  #   sidebarMenu(
+  #     # sidebarSearchForm(textId = "searchText",buttonId = "searchButton",label = "Search..."),
+  #     menuItem("Dashboard", tabName = "dashboard", icon = icon("dashboard"), badgeLabel = "new", badgeColor = "blue", selected = TRUE),
+  #     menuItem("Widgets", tabName = "widgets", icon = icon("th")),
+  #     menuItem("Source code", href = "https://github.com/rstudio/shinydashboafd", icon = icon("file-code-o")),
+  #     sliderInput("slider2", "Slider:", min = 1, max = 20, value = 5),
+  #     textInput("text", "Text Input:")
+  #   )
+  # })
+    
   output$plot1 <- renderPlot({
     data <- histdata[seq_len(input$slider)]
     # data <- histdata[1:input$slider]
@@ -153,6 +190,14 @@ server <- function(input, output) {
   
   output$tabset1Selected <- renderText({
     input$tabset1
+  })
+  
+  output$progressBox <- renderInfoBox({
+    infoBox("Progress", paste0(25 + input$count, "%"), icon = icon("list"), color = "purple")
+  })
+  
+  output$approvalBox <- renderInfoBox({
+    infoBox("Approval", "80%", icon = icon("thumbs-up", lib = "glyphicon"), color = "yellow")
   })
 }
 
